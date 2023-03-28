@@ -40,6 +40,7 @@ type NextAuthOptionsCallback = (
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
+// @ts-expect-error
 const nextAuthOptions: NextAuthOptionsCallback = (req, res) => {
   return {
     // https://next-auth.js.org/configuration/providers/oauth
@@ -69,13 +70,7 @@ const nextAuthOptions: NextAuthOptionsCallback = (req, res) => {
         // Persist the OAuth access_token and or the user id to the token right after signin
         // Initial sign in
         if (account && user) {
-          setCookie(
-            { res },
-            "wm_ac",
-            // @ts-expect-error
-            account.access_token,
-            cookieConfig
-          );
+          setCookie({ res }, "wm_ac", account.access_token, cookieConfig);
           return {
             // save token to session for authenticating to AWS
             // https://next-auth.js.org/configuration/callbacks#jwt-callback
@@ -89,7 +84,6 @@ const nextAuthOptions: NextAuthOptionsCallback = (req, res) => {
         }
 
         // Return previous token if the access token has not expired yet
-        // @ts-expect-error
         if (Date.now() < token.accessTokenExpires) {
           console.log("existing token is still valid");
           return token;
@@ -101,7 +95,6 @@ const nextAuthOptions: NextAuthOptionsCallback = (req, res) => {
         setCookie(
           { res },
           "wm_ac",
-          // @ts-expect-error
           refreshedTokens?.AccessToken ?? token.accessToken,
           cookieConfig
         );
@@ -123,13 +116,9 @@ const nextAuthOptions: NextAuthOptionsCallback = (req, res) => {
           console.error("No accessToken found on token or session");
           return session;
         }
-        // @ts-expect-error
         session.user = token.user;
-        // @ts-expect-error
         session.accessToken = token.accessToken;
-        // @ts-expect-error
-        session.error = token.error;
-
+        // session.error = token.error;
         return session;
       },
     },
