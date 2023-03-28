@@ -27,9 +27,9 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.COGNITO_CLIENT_SECRET!,
       // clientSecret: "",
       issuer: process.env.COGNITO_ISSUER,
-      // client: {
-      //   token_endpoint_auth_method: "none",
-      // },
+      client: {
+        token_endpoint_auth_method: "none",
+      },
     }),
   ],
   theme: {
