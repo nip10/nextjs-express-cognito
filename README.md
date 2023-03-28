@@ -50,9 +50,7 @@ client: {
 
   Because this lib stores tokens in localstorage or cookies without httpOnly. This is not secure, and the issues on the repo are not being addressed.
 
-- I really want to use AWS Amplify UI, but I need to use cookies. How do I do that ?
-
-  Since the major issue here is related to the way that tokens are stored, we need to find a workaround.
+- I really want to use AWS Amplify UI, is there any way to make is secure ?
 
   - One way is to use a custom Storage class, which Amplify will use to store the tokens. You can build a custom storage that sends the tokens to the server, and the server will set the cookies back. In other words, a `set` method would make a POST request to some endpoint you created, and a `get` method would make a GET request to the same endpoint. You could also create a `delete` method that would make a DELETE request to the same endpoint, for the logout functionality.
   - Other way is to create a lambda function that will sit in between Cognito and the client, it would work something like this: client -> cognito -> (oauth2 redirect url) -> lambda -> (set httponly secure cookies) -> client.
