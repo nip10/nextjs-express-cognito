@@ -2,7 +2,8 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import express, { type Request, type Response } from "express";
 import CognitoExpress from "cognito-express";
-import cors, { CorsOptions } from "cors";
+import cors, { type CorsOptions } from "cors";
+import cookieParser from "cookie-parser";
 
 const { COGNITO_REGION, COGNITO_USER_POOL_ID } = process.env;
 
@@ -11,7 +12,7 @@ const app = express();
 const cognitoExpress = new CognitoExpress({
   region: COGNITO_REGION,
   cognitoUserPoolId: COGNITO_USER_POOL_ID,
-  tokenUse: "id", //Possible Values: access | id
+  tokenUse: "access", //Possible Values: access | id
   tokenExpiration: 3600000, //Up to default expiration of 1 hour (3600000 ms)
 });
 
@@ -27,6 +28,7 @@ const corsOptions: CorsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
+app.use(cookieParser());
 
 app.get("/", (req: Request, res: Response) => {
   return res.json({
@@ -35,7 +37,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("/restricted", async (req: Request, res: Response) => {
-  const accessTokenFromClient = req.headers.accesstoken;
+  const accessTokenFromClient = req.cookies.wm_ac;
+  console.log("accessTokenFromClient", accessTokenFromClient);
   if (!accessTokenFromClient) {
     return res.status(401).json({ error: "Access Token missing from header" });
   }

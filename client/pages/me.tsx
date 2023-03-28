@@ -9,20 +9,13 @@ export default function MePage() {
   useEffect(() => {
     async function foo() {
       const res = await fetch("http://localhost:3001/restricted", {
-        headers: {
-          // @ts-expect-error
-          accesstoken: data?.idToken,
-        },
+        credentials: "include",
       });
       const json = await res.json();
       setApiResponse(json);
     }
-    // @ts-expect-error
-    if (data?.idToken) {
-      foo();
-    }
-    // @ts-expect-error
-  }, [data?.idToken]);
+    foo();
+  }, []);
 
   return (
     <Layout>
